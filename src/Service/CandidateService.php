@@ -18,7 +18,7 @@ class CandidateService
     {
         $matchingCandidates = $this->entityManager
             ->getRepository(Candidate::class)
-            ->findAll();
+            ->findMatchingCandidates($jobRequirements);
 
         return $matchingCandidates;
     }

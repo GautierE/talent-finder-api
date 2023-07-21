@@ -21,28 +21,36 @@ class CandidateRepository extends ServiceEntityRepository
         parent::__construct($registry, Candidate::class);
     }
 
-//    /**
-//     * @return Candidate[] Returns an array of Candidate objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findMatchingCandidates(array $jobRequirements): array
+    {
+        $qb = $this->createQueryBuilder('c');
 
-//    public function findOneBySomeField($value): ?Candidate
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if (isset($jobRequirements['experience'])) {
+            // Look for candidates with slighlty less or more experience
+            $experienceRequirement = max(0, $jobRequirements['experience'] - 2);
+
+            $qb->andWhere('c.experience >= :requiredExperience')
+                ->setParameter('requiredExperience', $experienceRequirement);
+        }
+
+        if (isset($jobRequirements['isRemote']) && $jobRequirements['isRemote']) {
+            $qb->andWhere('c.isRemote = :isRemote')
+                ->setParameter('isRemote', true);
+        } else if (isset($jobRequirements['location'])) {
+            $qb->andWhere('c.location = :location')
+                ->setParameter('location', $jobRequirements['location']);
+        }
+
+        if (isset($jobRequirements['salary'])) {
+            $salary = $jobRequirements['salary'];
+            $salaryLowerLimit = $salary  * 0.85;
+            $salaryUpperLimit = $salary * 1.15;
+
+            $qb->andWhere('c.salary BETWEEN :lowerLimit AND :upperLimit')
+                ->setParameter('lowerLimit', $salaryLowerLimit)
+                ->setParameter('upperLimit', $salaryUpperLimit);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

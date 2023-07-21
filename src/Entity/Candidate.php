@@ -38,6 +38,9 @@ class Candidate
     #[ORM\ManyToMany(targetEntity: Skill::class, inversedBy: 'candidates')]
     private Collection $skills;
 
+    #[ORM\Column]
+    private ?int $salary = null;
+
     public function __construct()
     {
         $this->skills = new ArrayCollection();
@@ -140,6 +143,18 @@ class Candidate
     public function removeSkill(Skill $skill): static
     {
         $this->skills->removeElement($skill);
+
+        return $this;
+    }
+
+    public function getSalary(): ?int
+    {
+        return $this->salary;
+    }
+
+    public function setSalary(int $salary): static
+    {
+        $this->salary = $salary;
 
         return $this;
     }
