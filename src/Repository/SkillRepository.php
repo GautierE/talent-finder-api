@@ -21,28 +21,15 @@ class SkillRepository extends ServiceEntityRepository
         parent::__construct($registry, Skill::class);
     }
 
-//    /**
-//     * @return Skill[] Returns an array of Skill objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function getRandomSkillsByCategoryAndCount(string $category, int $numSkills): array
+    {
+        $queryBuilder = $this->createQueryBuilder('s');
+        $queryBuilder
+            ->where('s.category = :category')
+            ->setParameter('category', $category)
+            ->orderBy('RAND()')
+            ->setMaxResults($numSkills);
 
-//    public function findOneBySomeField($value): ?Skill
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

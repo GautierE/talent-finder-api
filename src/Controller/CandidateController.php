@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CandidateController extends AbstractController
 {
     #[Route('/match', name: 'match_candidates', methods: ['POST'])]
-    public function matchCandidates(Request $request, CandidateService $candidateService): Response
+    public function match(Request $request, CandidateService $candidateService): Response
     {
         $requestData = json_decode($request->getContent(), true);
 
@@ -31,5 +31,13 @@ class CandidateController extends AbstractController
         $matchingCandidates = $candidateService->matchCandidates($jobRequirements);
 
         return $this->json($matchingCandidates);
+    }
+
+    #[Route('/generate', name: 'generate_candidate', methods: ['GET'])]
+    public function generate(CandidateService $candidateService): Response
+    {
+        $newCandidate = $candidateService->generateRandomCandidate();
+
+        return $this->json($newCandidate, 200);
     }
 }
