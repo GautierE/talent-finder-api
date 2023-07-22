@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Candidate;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Candidate>
@@ -43,12 +44,18 @@ class CandidateRepository extends ServiceEntityRepository
 
         if (isset($jobRequirements['salary'])) {
             $salary = $jobRequirements['salary'];
-            $salaryLowerLimit = $salary  * 0.85;
+            $salaryLowerLimit = $salary  * 0.75;
             $salaryUpperLimit = $salary * 1.15;
 
             $qb->andWhere('c.salary BETWEEN :lowerLimit AND :upperLimit')
                 ->setParameter('lowerLimit', $salaryLowerLimit)
                 ->setParameter('upperLimit', $salaryUpperLimit);
+        }
+
+        if (isset($jobRequirements['mainSkills']) && !empty($jobRequirements['mainSkills'])) {
+            $qb->leftJoin('c.skills', 's', Join::WITH, $qb->expr()->in('s.name', ':mainSkills'))
+                ->andWhere($qb->expr()->isNotNull('s.id'))
+                ->setParameter('mainSkills', $jobRequirements['mainSkills']);
         }
 
         return $qb->getQuery()->getResult();

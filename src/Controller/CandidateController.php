@@ -20,12 +20,14 @@ class CandidateController extends AbstractController
         $isRemote = $requestData['isremote'] ?? null;
         $experience = $requestData['experience'] ?? null;
         $salary = $requestData['salary'] ?? null;
+        $mainSkills = $request->get('mainSkills') ?? [];
 
         $jobRequirements = [
             'location' => $location,
             'isRemote' => $isRemote,
             'experience' => $experience,
             'salary' => $salary,
+            'mainSkills' => $mainSkills
         ];
 
         $matchingCandidates = $candidateService->matchCandidates($jobRequirements);
