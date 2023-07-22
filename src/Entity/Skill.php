@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\SkillRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\SkillRepository;
+use ApiPlatform\Metadata\ApiResource;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SkillRepository::class)]
 #[ApiResource]
@@ -18,12 +19,14 @@ class Skill
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['candidate:list'])]
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Candidate::class, mappedBy: 'skills')]
     private Collection $candidates;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['candidate:list'])]
     private ?string $category = null;
 
     public function __construct()

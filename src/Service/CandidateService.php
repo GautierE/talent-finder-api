@@ -33,6 +33,39 @@ class CandidateService
         return $matchingCandidates;
     }
 
+    public function sortCandidates(array $candidates, array $jobRequirements): array
+    {
+        $sortedCandidates = [];
+        $mainSkillsLower = array_map('strtolower', $jobRequirements['mainSkills']);
+        $secondarySkillsLower = array_map('strtolower', $jobRequirements['secondarySkills']);
+
+        foreach ($candidates as $candidate) {
+            $score = 0;
+
+            $candidateSkills = $candidate->getSkills();
+            foreach ($candidateSkills as $candidateSkill) {
+                $skillNameLower = strtolower($candidateSkill->getName());
+                if (in_array($skillNameLower, $mainSkillsLower)) {
+                    $score += 10;
+                } else if (in_array($skillNameLower, $secondarySkillsLower)) {
+                    $score += 5;
+                }
+            }
+
+            // Remove 5 points for each year of experience missing in comparison to the required experience
+            $experienceDiff = $candidate->getExperience() - $jobRequirements['experience'];
+            if ($experienceDiff < 0) {
+                $score -= 5 * abs($experienceDiff);
+            }
+
+            $sortedCandidates[$score] = $candidate;
+        }
+
+        krsort($sortedCandidates);
+
+        return array_values($sortedCandidates);
+    }
+
     public function generateRandomCandidate(): Candidate
     {
         $candidate = new Candidate();

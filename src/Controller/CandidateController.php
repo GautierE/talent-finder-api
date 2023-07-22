@@ -20,19 +20,22 @@ class CandidateController extends AbstractController
         $isRemote = $requestData['isremote'] ?? null;
         $experience = $requestData['experience'] ?? null;
         $salary = $requestData['salary'] ?? null;
-        $mainSkills = $request->get('mainSkills') ?? [];
+        $mainSkills = $requestData['mainSkills'] ?? [];
+        $secondarySkills = $requestData['secondarySkills'] ?? [];
 
         $jobRequirements = [
             'location' => $location,
             'isRemote' => $isRemote,
             'experience' => $experience,
             'salary' => $salary,
-            'mainSkills' => $mainSkills
+            'mainSkills' => $mainSkills,
+            'secondarySkills' => $secondarySkills
         ];
 
         $matchingCandidates = $candidateService->matchCandidates($jobRequirements);
+        $sortedCandidates = $candidateService->sortCandidates($matchingCandidates, $jobRequirements);
 
-        return $this->json($matchingCandidates);
+        return $this->json($sortedCandidates, 200, [], ['groups' => 'candidate:list']);;
     }
 
     #[Route('/generate', name: 'generate_candidate', methods: ['GET'])]
@@ -40,6 +43,6 @@ class CandidateController extends AbstractController
     {
         $newCandidate = $candidateService->generateRandomCandidate();
 
-        return $this->json($newCandidate, 200);
+        return $this->json($newCandidate, 200, [], ['groups' => 'candidate:list']);
     }
 }

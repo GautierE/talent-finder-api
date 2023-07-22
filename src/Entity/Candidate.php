@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CandidateRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CandidateRepository::class)]
 #[
@@ -24,30 +25,39 @@ class Candidate
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['candidate:list'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['candidate:list'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['candidate:list'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['candidate:list'])]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['candidate:list'])]
     private ?int $experience = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['candidate:list'])]
     private ?string $location = null;
 
     #[ORM\Column]
+    #[Groups(['candidate:list'])]
     private ?bool $isRemote = null;
 
     #[ORM\ManyToMany(targetEntity: Skill::class, inversedBy: 'candidates')]
+    #[Groups(['candidate:list'])]
     private Collection $skills;
 
     #[ORM\Column]
+    #[Groups(['candidate:list'])]
     private ?int $salary = null;
 
     public function __construct()
