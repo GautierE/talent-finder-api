@@ -23,6 +23,9 @@ class Skill
     #[ORM\ManyToMany(targetEntity: Candidate::class, mappedBy: 'skills')]
     private Collection $candidates;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $category = null;
+
     public function __construct()
     {
         $this->candidates = new ArrayCollection();
@@ -68,6 +71,18 @@ class Skill
         if ($this->candidates->removeElement($candidate)) {
             $candidate->removeSkill($this);
         }
+
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?string $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }
