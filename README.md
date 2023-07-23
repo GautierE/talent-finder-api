@@ -33,7 +33,7 @@ It was built using Symfony 6, a MySQL database and is hosted using Platform.sh.
             <pre>
 {
     "location": "Paris",
-    "isremote": true,
+    "isRemote": true,
     "experience": 3,
     "salary": 50000,
     "mainSkills": ["PHP", "JavaScript", "MySQL"],
