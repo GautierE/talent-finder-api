@@ -1,8 +1,19 @@
 # Talent Finder API
 <h2>Overview</h2>
 Talent Finder API is a web API designed to help companies find candidates for their job opportunities based on various criteria such as location, experience, skills, and salary requirements.
-<br /><br />
-It was built using Symfony 6, a MySQL database and is hosted using Platform.sh.
+
+<h2>Technical Stack</h2>
+<b>Technologies/Methodologies I am using for the first time are in bold characters</b>
+  <ul>
+  <br/>
+<li>Backend : PHP</li>
+<li>Backend Framework : Symfony 6</li>
+<b>
+<li>Hosting (app & database) : Platform.sh</li>
+<li>TBD (Trunk-based development)</li>
+<li>Conventional commits</li>
+</b>
+</ul>
 <h2>API documentation</h2>
 <ol>
     <li>
