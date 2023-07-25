@@ -19,14 +19,14 @@ class Skill
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['candidate:list'])]
+    #[Groups(['candidate:list', 'skill:list'])]
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Candidate::class, mappedBy: 'skills')]
     private Collection $candidates;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['candidate:list'])]
+    #[Groups(['candidate:list', 'skill:list'])]
     private ?string $category = null;
 
     public function __construct()

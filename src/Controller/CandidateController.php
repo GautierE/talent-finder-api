@@ -17,7 +17,7 @@ class CandidateController extends AbstractController
         $requestData = json_decode($request->getContent(), true);
 
         $location = $requestData['location'] ?? null;
-        $isRemote = $requestData['isremote'] ?? null;
+        $isRemote = $requestData['isRemote'] ?? null;
         $experience = $requestData['experience'] ?? null;
         $salary = $requestData['salary'] ?? null;
         $mainSkills = $requestData['mainSkills'] ?? [];
