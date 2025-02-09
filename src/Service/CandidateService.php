@@ -35,7 +35,7 @@ class CandidateService
 
     public function sortCandidates(array $candidates, array $jobRequirements): array
     {
-        $sortedCandidates = [];
+        $candidateScores = [];
         $mainSkillsLower = array_map('strtolower', $jobRequirements['mainSkills']);
         $secondarySkillsLower = array_map('strtolower', $jobRequirements['secondarySkills']);
 
@@ -47,23 +47,32 @@ class CandidateService
                 $skillNameLower = strtolower($candidateSkill->getName());
                 if (in_array($skillNameLower, $mainSkillsLower)) {
                     $score += 10;
-                } else if (in_array($skillNameLower, $secondarySkillsLower)) {
+                } elseif (in_array($skillNameLower, $secondarySkillsLower)) {
                     $score += 5;
                 }
             }
 
-            // Remove 5 points for each year of experience missing in comparison to the required experience
+            // Subtract points if candidate has fewer years of experience than required
             $experienceDiff = $candidate->getExperience() - $jobRequirements['experience'];
             if ($experienceDiff < 0) {
                 $score -= 5 * abs($experienceDiff);
             }
 
-            $sortedCandidates[$score] = $candidate;
+            $candidateScores[] = [
+                'score'     => $score,
+                'candidate' => $candidate,
+            ];
         }
 
-        krsort($sortedCandidates);
+        usort($candidateScores, function ($a, $b) {
+            return $b['score'] <=> $a['score'];
+        });
 
-        return array_values($sortedCandidates);
+        $sortedCandidates = array_map(function ($item) {
+            return $item['candidate'];
+        }, $candidateScores);
+
+        return $sortedCandidates;
     }
 
     public function generateRandomCandidate(): Candidate
